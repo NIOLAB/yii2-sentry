@@ -1,6 +1,6 @@
 <?php
 
-namespace niolab\sentry\helpers;
+namespace NIOLAB\sentry\helpers;
 
 use Yii;
 
