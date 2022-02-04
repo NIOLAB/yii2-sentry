@@ -36,7 +36,7 @@
  *
  */
 
-namespace NIOLAB\sentry\log;
+namespace NIOLAB\sentry;
 
 use app\helpers\ArrayHelper;
 use app\modules\sentry\log\SentryPerformanceLogger;
