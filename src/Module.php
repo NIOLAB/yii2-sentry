@@ -39,7 +39,7 @@
 namespace NIOLAB\sentry;
 
 use app\helpers\ArrayHelper;
-use app\modules\sentry\log\SentryPerformanceLogger;
+use NIOLAB\sentry\log\SentryPerformanceLogger;
 use notamedia\sentry\SentryTarget;
 use Yii;
 use yii\base\Application;
