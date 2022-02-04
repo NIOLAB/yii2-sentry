@@ -1,0 +1,25 @@
+{
+  "name": "niolab/yii2-sentry",
+  "description": "Yii2 Sentry.io - Exception monitoring and performance tracing",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2"
+  ],
+  "license": "MIT",
+  "authors": [
+     {
+      "name": "Harry Doddema",
+      "email": "harry@niomail.nl",
+      "role": "Senior Developer"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.14",
+    "notamedia/yii2-sentry": "^1.7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NIOLAB\\sentry\\": "src"
+    }
+  }
+}
