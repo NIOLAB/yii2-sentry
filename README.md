@@ -19,7 +19,7 @@ Add the module to your config:
 ```php
 ...
 'sentry' => [
-    'class'=>\app\modules\sentry\Module::class,
+    'class'=>\niolab\sentry\Module::class,
     'dsn' => 'https://xxxxx@yyyy.ingest.sentry.io/00000', // your sentry.io URL here
     'targetOptions' => [
         // extra options for the SentryTarget      
