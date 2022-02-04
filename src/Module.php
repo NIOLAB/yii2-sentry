@@ -69,7 +69,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
             'context' => true,
             // Additional options for `Sentry\init`:
             'clientOptions' => [
-                'release' => niolab\sentry\helpers\GitInfo::commit(),
+                'release' => NIOLAB\sentry\helpers\GitInfo::commit(),
                 'traces_sample_rate' => 0.2,
                 'environment' => YII_ENV
             ],
