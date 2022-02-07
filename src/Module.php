@@ -38,7 +38,7 @@
 
 namespace NIOLAB\sentry;
 
-use app\helpers\ArrayHelper;
+use yii\helpers\ArrayHelper;
 use NIOLAB\sentry\log\SentryPerformanceLogger;
 use notamedia\sentry\SentryTarget;
 use Yii;
