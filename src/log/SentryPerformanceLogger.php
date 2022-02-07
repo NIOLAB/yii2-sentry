@@ -62,10 +62,13 @@ class SentryPerformanceLogger extends Logger
 
     protected static function getSentryOpFromCategory($category)
     {
-        return match ($category) {
+        $categories = [
             'yii\db\Command::query' => 'db.query',
             'yii\db\Connection::open' => 'db.connection',
-            default => $category,
-        };
+        ];
+        if (isset($categories[$category])) {
+            return $categories[$category];
+        }
+        return $category;
     }
 }
