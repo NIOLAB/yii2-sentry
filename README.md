@@ -28,9 +28,9 @@ Add the module to your config:
 ...
 ```
 
-Add the module to the application bootstrap.
+Add the module to the application bootstrap. ⚠️ Make sure you add `sentry` **before** `log`!
 ```php
 ...
-'bootstrap' => ['log','sentry']
+'bootstrap' => ['sentry','log']
 ...
 ```
