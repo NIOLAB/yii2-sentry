@@ -38,6 +38,7 @@
 
 namespace NIOLAB\sentry;
 
+use phpDocumentor\Reflection\Types\Boolean;
 use yii\helpers\ArrayHelper;
 use NIOLAB\sentry\log\SentryPerformanceLogger;
 use notamedia\sentry\SentryTarget;
@@ -49,6 +50,7 @@ use yii\debug\LogTarget;
 class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public ?string $dsn;
+    public bool $enabled = true;
     public array $targetOptions = [];
 
     public function bootstrap($app)
@@ -61,7 +63,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
         ]);
         Yii::setLogger(Yii::createObject(SentryPerformanceLogger::class));
         $defaultConfig = [
-            'enabled' => !YII_ENV_DEV,
+            'enabled' => $this->enabled,
             'dsn' => $this->dsn,
             'levels' => ['error', 'warning'],
             'except' => ['yii\debug*','yii\web*'],
@@ -79,6 +81,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function startTransaction(Event $event)
     {
+        if (!$this->enabled) return;
         $transactionContext = new \Sentry\Tracing\TransactionContext();
         $transactionContext->setName(Yii::$app->request->method.' /'.Yii::$app->request->pathInfo);
         $transactionContext->setOp('http.request');
@@ -91,6 +94,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function finishTransaction(Event $event)
     {
+        if (!$this->enabled) return;
         $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
         if ($transaction !== null) {
             $transaction->finish();
