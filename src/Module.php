@@ -55,6 +55,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function bootstrap($app)
     {
+        if (!$this->enabled) return;
         $app->on(Application::EVENT_BEFORE_REQUEST, [$this, 'startTransaction']);
         $app->on(Application::EVENT_AFTER_REQUEST, [$this, 'finishTransaction']);
 
@@ -81,7 +82,6 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function startTransaction(Event $event)
     {
-        if (!$this->enabled) return;
         $transactionContext = new \Sentry\Tracing\TransactionContext();
         $transactionContext->setName(Yii::$app->request->method.' /'.Yii::$app->request->pathInfo);
         $transactionContext->setOp('http.request');
@@ -94,7 +94,6 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function finishTransaction(Event $event)
     {
-        if (!$this->enabled) return;
         $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
         if ($transaction !== null) {
             $transaction->finish();
