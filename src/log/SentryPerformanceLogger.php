@@ -28,11 +28,11 @@ class SentryPerformanceLogger extends Logger
 
     public function flush($final = false)
     {
-        parent::flush($final);
         $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
         if ($transaction !== null) {
             $transaction->finish();
         }
+        parent::flush($final);
     }
 
     protected function startSpan($message, $category)
