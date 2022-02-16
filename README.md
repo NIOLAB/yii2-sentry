@@ -19,8 +19,9 @@ Add the module to your config:
 ```php
 ...
 'sentry' => [
-    'class'=>\niolab\sentry\Module::class,
+    'class'=>\NIOLAB\sentry\Module::class,
     'dsn' => 'https://xxxxx@yyyy.ingest.sentry.io/00000', // your sentry.io URL here
+    'enabled' => !YII_ENV_DEV,
     'targetOptions' => [
         // extra options for the SentryTarget      
     ]
