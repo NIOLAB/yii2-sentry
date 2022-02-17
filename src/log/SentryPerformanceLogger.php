@@ -30,10 +30,12 @@ class SentryPerformanceLogger extends Logger
     public function flush($final = false)
     {
         parent::flush($final);
-        $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
-        if ($transaction !== null) {
-            $transaction->setStatus(SpanStatus::createFromHttpStatusCode(\Yii::$app->response->statusCode));
-            $transaction->finish();
+        if ($final) {
+            $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
+            if ($transaction !== null) {
+                $transaction->setStatus(SpanStatus::createFromHttpStatusCode(\Yii::$app->response->statusCode));
+                $transaction->finish();
+            }
         }
     }
 

@@ -39,6 +39,7 @@
 namespace NIOLAB\sentry;
 
 use phpDocumentor\Reflection\Types\Boolean;
+use Sentry\Tracing\SpanStatus;
 use yii\helpers\ArrayHelper;
 use NIOLAB\sentry\log\SentryPerformanceLogger;
 use notamedia\sentry\SentryTarget;
@@ -66,15 +67,16 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
         $defaultConfig = [
             'enabled' => $this->enabled,
             'dsn' => $this->dsn,
-            'levels' => ['error', 'warning'],
+            'levels' => ['error'],
             'except' => ['yii\debug*','yii\web*'],
             // Write the context information (the default is true):
             'context' => true,
             // Additional options for `Sentry\init`:
             'clientOptions' => [
                 'release' => \NIOLAB\sentry\helpers\GitInfo::commit(),
+                'send_default_pii' => true,
                 'traces_sample_rate' => 0.2,
-                'environment' => YII_ENV
+                'environment' => YII_ENV,
             ],
         ];
         $app->getLog()->targets['sentry'] = new SentryTarget(ArrayHelper::merge($defaultConfig,$this->targetOptions));
@@ -96,6 +98,7 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
     {
         $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
         if ($transaction !== null) {
+            $transaction->setStatus(SpanStatus::createFromHttpStatusCode(\Yii::$app->response->statusCode));
             $transaction->finish();
         }
     }
