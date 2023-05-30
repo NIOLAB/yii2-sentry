@@ -38,6 +38,7 @@
 
 namespace NIOLAB\sentry;
 
+use Exception;
 use phpDocumentor\Reflection\Types\Boolean;
 use Sentry\Tracing\SpanStatus;
 use yii\helpers\ArrayHelper;
@@ -84,22 +85,29 @@ class Module extends \yii\base\Module implements \yii\base\BootstrapInterface {
 
     public function startTransaction(Event $event)
     {
-        $transactionContext = new \Sentry\Tracing\TransactionContext();
-        $transactionContext->setName(Yii::$app->request->method.' /'.Yii::$app->request->pathInfo);
-        $transactionContext->setOp('http.request');
-        // Start the transaction
-        $transaction = \Sentry\startTransaction($transactionContext);
-        // Set the current transaction as the current span so we can retrieve it later
-        \Sentry\SentrySdk::getCurrentHub()->setSpan($transaction);
-
+        try {
+            $transactionContext = new \Sentry\Tracing\TransactionContext();
+            $transactionContext->setName(Yii::$app->request->method.' /'.Yii::$app->request->pathInfo);
+            $transactionContext->setOp('http.request');
+            // Start the transaction
+            $transaction = \Sentry\startTransaction($transactionContext);
+            // Set the current transaction as the current span so we can retrieve it later
+            \Sentry\SentrySdk::getCurrentHub()->setSpan($transaction);
+        } catch (Exception $e) {
+            // Do nothing
+        }
     }
 
     public function finishTransaction(Event $event)
     {
-        $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
-        if ($transaction !== null) {
-            $transaction->setStatus(SpanStatus::createFromHttpStatusCode(\Yii::$app->response->statusCode));
-            $transaction->finish();
+        try {
+            $transaction = \Sentry\SentrySdk::getCurrentHub()->getTransaction();
+            if ($transaction !== null) {
+                $transaction->setStatus(SpanStatus::createFromHttpStatusCode(\Yii::$app->response->statusCode));
+                $transaction->finish();
+            }
+        } catch (Exception $e) {
+            // Do nothing
         }
     }
 }
